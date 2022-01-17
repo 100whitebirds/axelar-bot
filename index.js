@@ -25,6 +25,7 @@ const externalUrl = process.env.URL || 'https://axelarbot.herokuapp.com/'
 const roadmapEng = __dirname + '/assets/ROADMAP-ENG.png'
 const roadmapRus = __dirname + '/assets/ROADMAP-RUS.png'
 const backers = __dirname + '/assets/BACKERS.jpeg'
+const quantumImg = __dirname + '/assets/QUANTUM.png'
 
 var usersLang = ''
 var subscribedUsers = []
@@ -51,11 +52,10 @@ const start = () => {
   topicOptionsEng = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'About Axelar', callback_data: 'aboutAxelar' }],
-        [{ text: 'Quantum community program', callback_data: 'quantum' }],
-        [{ text: 'For developers', callback_data: 'dev' }],
-        [{ text: 'Whitepaper', url: 'https://axelar.network/wp-content/uploads/2021/07/axelar_whitepaper.pdf' }],
-        [{ text: 'Subscribe for notifications', callback_data: 'notifications' }],
+        [{ text: 'ℹ️ About Axelar', callback_data: 'aboutAxelar' },],
+        [{ text: '👪 Quantum community program', callback_data: 'quantum' }],
+        [{ text: '🧑‍💻 For developers', callback_data: 'dev' }, { text: '📄 Whitepaper', url: 'https://axelar.network/wp-content/uploads/2021/07/axelar_whitepaper.pdf' }],
+        [{ text: '🔔 Subscribe for notifications', callback_data: 'notifications' }],
         [{ text: '🌐 Change language', callback_data: 'backtoLang' }],
       ]
     })
@@ -63,11 +63,10 @@ const start = () => {
   topicOptionsRus = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'Об Axelar', callback_data: 'aboutAxelar' }],
-        [{ text: 'Программа для коммюнити "Quantum"', callback_data: 'quantum' }],
-        [{ text: 'Разработчикам', callback_data: 'dev' }],
-        [{ text: 'Whitepaper', url: 'https://axelar.network/wp-content/uploads/2021/07/axelar_whitepaper.pdf' }],
-        [{ text: 'Подписаться на уведомления', callback_data: 'notifications' }],
+        [{ text: 'ℹ️ Об Axelar', callback_data: 'aboutAxelar' }],
+        [{ text: '👪 Программа для коммюнити "Quantum"', callback_data: 'quantum' }],
+        [{ text: '🧑‍💻 Разработчикам', callback_data: 'dev' }, { text: '📄 Whitepaper', url: 'https://axelar.network/wp-content/uploads/2021/07/axelar_whitepaper.pdf' }],
+        [{ text: '🔔 Подписаться на уведомления', callback_data: 'notifications' }],
         [{ text: '🌐 Выбрать другой язык', callback_data: 'backtoLang' }],
       ]
     })
@@ -76,12 +75,9 @@ const start = () => {
     aboutAxelarOptionsEng = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Articles', callback_data: 'articles' }],
-          [{ text: 'Telegram channels', callback_data: 'channels' }],
-          [{ text: 'Videos', callback_data: 'videos' }],
-          [{ text: 'Backers', callback_data: 'funds' }],
-          [{ text: 'Roadmap', callback_data: 'roadmap' }],
-          [{ text: 'Contacts', callback_data: 'contacts' }],
+          [{ text: '📝 Articles', callback_data: 'articles' }, { text: '💬 Telegram channels', callback_data: 'channels' }],
+          [{ text: '🎦 Videos', callback_data: 'videos' }, { text: '💲 Backers', callback_data: 'funds' }],
+          [{ text: '🛣 Roadmap', callback_data: 'roadmap' }, { text: '👥 Contacts', callback_data: 'contacts' }],
           [{ text: 'How to get involved?', callback_data: 'hotoget' }],
           [{ text: '⬅️ Back', callback_data: 'backtoMainMenu' }],
         ]
@@ -90,12 +86,9 @@ const start = () => {
     aboutAxelarOptionsRus = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Статьи', callback_data: 'articles' }],
-          [{ text: 'Telegram каналы', callback_data: 'channels' }],
-          [{ text: 'Видео', callback_data: 'videos' }],
-          [{ text: 'Фонды', callback_data: 'funds' }],
-          [{ text: 'Roadmap', callback_data: 'roadmap' }],
-          [{ text: 'Контакты', callback_data: 'contacts' }],
+          [{ text: '📝 Статьи', callback_data: 'articles' }, { text: '💬 Telegram каналы', callback_data: 'channels' }],
+          [{ text: '🎦 Видео', callback_data: 'videos' }, { text: '💲 Фонды', callback_data: 'funds' }],
+          [{ text: '🛣 Roadmap', callback_data: 'roadmap' }, { text: '👥 Контакты', callback_data: 'contacts' }],
           [{ text: 'Как я могу поучаствовать в проекте?', callback_data: 'hotoget' }],
           [{ text: '⬅️ Назад', callback_data: 'backtoMainMenu' }],
         ]
@@ -143,10 +136,8 @@ const start = () => {
     contactsOptionsEng = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Axelar Website', url: 'https://axelar.network' }],
-          [{ text: 'Twitter', url: 'https://twitter.com/axelarcore' }],
-          [{ text: 'Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }],
-          [{ text: 'Medium', url: 'https://medium.com/axelar' }],
+          [{ text: 'Axelar Website', url: 'https://axelar.network' }, { text: 'Twitter', url: 'https://twitter.com/axelarcore' }],
+          [{ text: 'Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }, { text: 'Medium', url: 'https://medium.com/axelar' }],
           [{ text: 'Telegram Announcements', url: 'https://t.me/axelarnetwork' }],
           [{ text: 'Telegram Community', url: 'https://t.me/axelarcommunity' }],
           [{ text: 'Developer Discord', url: 'https://discord.com/invite/aRZ3Ra6f7D' }],
@@ -157,13 +148,33 @@ const start = () => {
     contactsOptionsRus = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Axelar Website', url: 'https://axelar.network' }],
-          [{ text: 'Twitter', url: 'https://twitter.com/axelarcore' }],
-          [{ text: 'Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }],
-          [{ text: 'Medium', url: 'https://medium.com/axelar' }],
+          [{ text: 'Axelar Website', url: 'https://axelar.network' }, { text: 'Twitter', url: 'https://twitter.com/axelarcore' }],
+          [{ text: 'Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }, { text: 'Medium', url: 'https://medium.com/axelar' }],
           [{ text: 'Telegram проекта', url: 'https://t.me/axelarnetwork' }],
           [{ text: 'Telegram сообщества', url: 'https://t.me/axelarcommunity' }],
           [{ text: 'Discord', url: 'https://discord.com/invite/aRZ3Ra6f7D' }],
+          [{ text: '⬅️ Назад', callback_data: 'backtoAboutAxelar' }],
+        ]
+      })
+    }
+    fundsOptionsEng = {
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [{ text: 'Coinbase', url: 'https://www.coinbase.com/ru/ventures' }, { text: 'Polychain Capital', url: 'https://polychain.capital/' }],
+          [{ text: 'Binance', url: 'https://www.binance.com/' }, { text: 'Dragonfly Capital', url: 'https://www.dcp.capital/' }],
+          [{ text: 'Divergence Ventures', url: 'https://www.div.vc/' }, { text: 'Morningstar Ventures', url: 'https://morningstar.ventures/' }],
+          [{ text: 'Skytale Ventures', url: 'https://scytale.ventures/' }, { text: 'North Island Ventures', url: 'https://www.northisland.ventures/' }],
+          [{ text: '⬅️ Back', callback_data: 'backtoAboutAxelar' }],
+        ]
+      })
+    }
+    fundsOptionsRus = {
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [{ text: 'Coinbase', url: 'https://www.coinbase.com/ru/ventures' }, { text: 'Polychain Capital', url: 'https://polychain.capital/' }],
+          [{ text: 'Binance', url: 'https://www.binance.com/' }, { text: 'Dragonfly Capital', url: 'https://www.dcp.capital/' }],
+          [{ text: 'Divergence Ventures', url: 'https://www.div.vc/' }, { text: 'Morningstar Ventures', url: 'https://morningstar.ventures/' }],
+          [{ text: 'Skytale Ventures', url: 'https://scytale.ventures/' }, { text: 'North Island Ventures', url: 'https://www.northisland.ventures/' }],
           [{ text: '⬅️ Назад', callback_data: 'backtoAboutAxelar' }],
         ]
       })
@@ -223,9 +234,7 @@ const start = () => {
   quantumOptionsEng = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'Guide', callback_data: 'guide' }],
-        [{ text: 'FAQ', callback_data: 'faq' }],
-        [{ text: 'Summary', callback_data: 'summary' }],
+        [{ text: 'More Info', url: 'https://axelar.network/axelar-announces-the-launch-of-their-incentivized-quantum-community-program' }],
         [{ text: '⬅️ Back', callback_data: 'backtoMainMenu' }],
       ]
     })
@@ -234,9 +243,7 @@ const start = () => {
   quantumOptionsRus = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'Руководство', callback_data: 'guide' }],
-        [{ text: 'FAQ', callback_data: 'faq' }],
-        [{ text: 'Summary', callback_data: 'summary' }],
+        [{ text: 'Узнать больше', url: 'https://axelar.network/axelar-announces-the-launch-of-their-incentivized-quantum-community-program' }],
         [{ text: '⬅️ Назад', callback_data: 'backtoMainMenu' }],
       ]
     })
@@ -289,9 +296,10 @@ const start = () => {
   bot.on('message', msg => {
     const text = msg.text
     const chatId = msg.chat.id
+    console.log(msg.chat.username)
+    
     if (text === '/start') {
-      return bot.sendMessage(
-        chatId, `Choose language`, languageOptions)
+      return bot.sendMessage( chatId, `Choose language`, languageOptions)
     }
     if (text.includes('42')) {
       subscribedUsers.forEach(userCharId => {
@@ -337,11 +345,11 @@ const start = () => {
         if (msg.data === 'funds') {
           if (usersLang === 'eng') {
             bot.sendMessage(chatId, fundsMessageEng())
-            return bot.sendPhoto(chatId, backers, goBackToAboutAxelarOptionsEng)
+            return bot.sendPhoto(chatId, backers, fundsOptionsEng)
           }
           if (usersLang === 'rus') {
             bot.sendMessage(chatId, fundsMessageRus())
-            return bot.sendPhoto(chatId, backers, goBackToAboutAxelarOptionsRus)
+            return bot.sendPhoto(chatId, backers, fundsOptionsRus)
           }
         }
         if (msg.data === 'articles') {
@@ -395,11 +403,12 @@ const start = () => {
 
     if (msg.data === 'quantum') {
       if (usersLang === 'eng') {
-        const message = quantumMessageEng()
-        return bot.sendMessage(chatId, `${message}`, quantumOptionsEng)
+        bot.sendMessage(chatId, quantumMessageEng())
+        return bot.sendPhoto(chatId, quantumImg, quantumOptionsEng)
       }
       if (usersLang === 'rus') {
-        return bot.sendMessage(chatId, quantumMessageRus(), quantumOptionsRus)
+        bot.sendMessage(chatId, quantumMessageRus(), quantumOptionsRus)
+        // return bot.sendPhoto(chatId, quantumImg, quantumOptionsRus)
       }
     } 
     //2 step
