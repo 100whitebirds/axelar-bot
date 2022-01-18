@@ -30,6 +30,12 @@ const backers = __dirname + '/assets/BACKERS.jpeg'
 const quantumImg = __dirname + '/assets/QUANTUM.png'
 const whitepaperEng = __dirname + '/assets/whitepaperEng.pdf'
 const whitepaperRus = __dirname + '/assets/whitepaperRus.pdf'
+const meme1 = __dirname + '/assets/memes/2022.png'
+const meme2 = __dirname + '/assets/memes/bear.png'
+const meme3 = __dirname + '/assets/memes/edem.png'
+const meme4 = __dirname + '/assets/memes/musketeers.png'
+const meme5 = __dirname + '/assets/memes/restrictions.png'
+const memes = [meme1, meme2, meme3, meme4, meme5]
 
 var usersLang = ''
 var subscribedUsers = []
@@ -39,7 +45,8 @@ const bot = new TelegramApi(token, {polling: true}, {webHook: {port: port, host:
 bot.setWebHook(externalUrl + ':8448/bot' + token)
 
 bot.setMyCommands([
-  {command: '/start', description: 'greeting'},
+  {command: '/start', description: 'Hello!'},
+  {command: '/meme', description: 'Get random community meme'},
 ])
 
 
@@ -322,6 +329,10 @@ const start = () => {
     }
     if (text === '/start') {
       return bot.sendMessage(chatId, `Choose language 🌐`, languageOptions)
+    }
+    if (text === '/meme') {
+      const rand = Math.floor(Math.random() * 5)
+      return bot.sendPhoto(chatId, memes[rand])
     }
     if (text.includes('42')) {
       subscribedUsers.forEach(userCharId => {
