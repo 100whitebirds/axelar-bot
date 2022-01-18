@@ -9,10 +9,10 @@ What is required to participate:
 🤳🏼 Write blog posts about various aspects of Axelar
 🎥 Create explanatory/step-by-step videos
 💹 Create informational graphics and videos
-📝 Creating entries in a technical blog
+📝 Create entries in a technical blog
 📚 Write manuals
 📜 Translate texts
-🤖 Creating Telegram/Discord bots
+🤖 Create Telegram/Discord bots
 💬 Participate in the creation and moderation of new community chats
 ⚛️ Creating graphics
 📄 Write posts about the Accelerator on your page in the Medium.

@@ -36,6 +36,7 @@ const meme3 = __dirname + '/assets/memes/edem.png'
 const meme4 = __dirname + '/assets/memes/musketeers.png'
 const meme5 = __dirname + '/assets/memes/restrictions.png'
 const memes = [meme1, meme2, meme3, meme4, meme5]
+const goose = __dirname + '/assets/memes/goose.mp4'
 
 var usersLang = ''
 var subscribedUsers = []
@@ -85,6 +86,20 @@ const start = () => {
     })
   }
     //2nd step
+    goBackToMainMenuOptionsEng = {
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [{ text: '⬅️ Back', callback_data: 'backtoMainMenu' }],
+        ]
+      })
+    }
+    goBackToMainMenuOptionsRus = {
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [{ text: '⬅️ Назад', callback_data: 'backtoMainMenu' }],
+        ]
+      })
+    }
     aboutAxelarOptionsEng = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
@@ -261,9 +276,9 @@ const start = () => {
   devOptionsEng = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'Incentivized Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
-        [{ text: 'Ecosystem Developer Opportunities', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
-        [{ text: 'Axelar Careers', url: 'https://axelar.network/careers' }],
+        [{ text: '💾 Incentivized Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
+        [{ text: '♻️ Ecosystem Developer Opportunities', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
+        [{ text: '💼 Axelar Careers', url: 'https://axelar.network/careers' }],
         [{ text: '⬅️ Back', callback_data: 'backtoMainMenu' }],
       ]
     })
@@ -272,9 +287,9 @@ const start = () => {
   devOptionsRus = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'Участие в Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
-        [{ text: 'Ecosystem Developer Opportunities', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
-        [{ text: 'Карьера в Axelar', url: 'https://axelar.network/careers' }],
+        [{ text: '💾 Участие в Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
+        [{ text: '♻️ Ecosystem Developer Opportunities', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
+        [{ text: '💼 Карьера в Axelar', url: 'https://axelar.network/careers' }],
         [{ text: '⬅️ Назад', callback_data: 'backtoMainMenu' }],
       ]
     })
@@ -331,8 +346,12 @@ const start = () => {
       return bot.sendMessage(chatId, `Choose language 🌐`, languageOptions)
     }
     if (text === '/meme') {
-      const rand = Math.floor(Math.random() * 5)
-      return bot.sendPhoto(chatId, memes[rand])
+      const rand = Math.floor(Math.random() * 6)
+      if (rand < 5) { 
+        console.log(rand)
+        return bot.sendPhoto(chatId, memes[rand])
+      }
+      return bot.sendVideo(chatId, goose)
     }
     if (text.includes('42')) {
       subscribedUsers.forEach(userCharId => {
@@ -434,7 +453,7 @@ const start = () => {
           }
         }
 
-    if (msg.data === 'quantum') {
+    if (msg.data === 'quantum' || msg.data === 'backtoQuantum') {
       if (usersLang === 'eng') {
         bot.sendMessage(chatId, quantumMessageEng())
         return bot.sendPhoto(chatId, quantumImg, quantumOptionsEng)
@@ -488,11 +507,11 @@ const start = () => {
     if (msg.data === 'whitepaper') {
       if (usersLang === 'eng') {
         bot.sendMessage(chatId, `There goes Axelar's Whitepaper!`)
-        return bot.sendDocument(chatId, whitepaperEng, goBackToAboutAxelarOptionsEng)
+        return bot.sendDocument(chatId, whitepaperEng, goBackToMainMenuOptionsEng)
       }
       if (usersLang === 'rus') {
         bot.sendMessage(chatId, `Whitepaper проекта на русском языке`)
-        return bot.sendDocument(chatId, whitepaperRus, goBackToAboutAxelarOptionsRus)
+        return bot.sendDocument(chatId, whitepaperRus, goBackToMainMenuOptionsRus)
       }
       bot.se
     } 
