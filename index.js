@@ -15,6 +15,8 @@ const contactsMessageEng = require('./messages/axelar/contacts/contactsMessageEn
 const contactsMessageRus = require('./messages/axelar/contacts/contactsMessageRus')
 const fundsMessageEng= require('./messages/axelar/funds/fundsMessageEng')
 const fundsMessageRus = require('./messages/axelar/funds/fundsMessageRus')
+const feedbackMessageEng= require('./messages/feedback/feedbackMessageEng')
+const feedbackMessageRus = require('./messages/feedback/feedbackMessageRus')
 const dotenv = require('dotenv').config()
 
 const token = process.env.TOKEN
@@ -26,9 +28,12 @@ const roadmapEng = __dirname + '/assets/ROADMAP-ENG.png'
 const roadmapRus = __dirname + '/assets/ROADMAP-RUS.png'
 const backers = __dirname + '/assets/BACKERS.jpeg'
 const quantumImg = __dirname + '/assets/QUANTUM.png'
+const whitepaperEng = __dirname + '/assets/whitepaperEng.pdf'
+const whitepaperRus = __dirname + '/assets/whitepaperRus.pdf'
 
 var usersLang = ''
 var subscribedUsers = []
+var chatsOnFeedback = []
 
 const bot = new TelegramApi(token, {polling: true}, {webHook: {port: port, host: host}})
 bot.setWebHook(externalUrl + ':8448/bot' + token)
@@ -43,8 +48,7 @@ const start = () => {
   languageOptions = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'English', callback_data: 'eng' }],
-        [{ text: 'Русский', callback_data: 'rus' }],
+        [{ text: 'English', callback_data: 'eng' }, { text: 'Русский', callback_data: 'rus' }],
       ]
     })
   }
@@ -52,10 +56,11 @@ const start = () => {
   topicOptionsEng = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'ℹ️ About Axelar', callback_data: 'aboutAxelar' },],
+        [{ text: 'ℹ️ All about Axelar', callback_data: 'aboutAxelar' },],
         [{ text: '👪 Quantum community program', callback_data: 'quantum' }],
-        [{ text: '🧑‍💻 For developers', callback_data: 'dev' }, { text: '📄 Whitepaper', url: 'https://axelar.network/wp-content/uploads/2021/07/axelar_whitepaper.pdf' }],
+        [{ text: '🧑‍💻 For developers', callback_data: 'dev' }, { text: '📄 Whitepaper', callback_data: 'whitepaper' }],
         [{ text: '🔔 Subscribe for notifications', callback_data: 'notifications' }],
+        [{ text: '📥 Send feedback', callback_data: 'feedback' }],
         [{ text: '🌐 Change language', callback_data: 'backtoLang' }],
       ]
     })
@@ -63,10 +68,11 @@ const start = () => {
   topicOptionsRus = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'ℹ️ Об Axelar', callback_data: 'aboutAxelar' }],
+        [{ text: 'ℹ️ Все об Axelar', callback_data: 'aboutAxelar' }],
         [{ text: '👪 Программа для коммюнити "Quantum"', callback_data: 'quantum' }],
-        [{ text: '🧑‍💻 Разработчикам', callback_data: 'dev' }, { text: '📄 Whitepaper', url: 'https://axelar.network/wp-content/uploads/2021/07/axelar_whitepaper.pdf' }],
+        [{ text: '🧑‍💻 Разработчикам', callback_data: 'dev' }, { text: '📄 Whitepaper', callback_data: 'whitepaper' }],
         [{ text: '🔔 Подписаться на уведомления', callback_data: 'notifications' }],
+        [{ text: '📥 Отзывы и предложения', callback_data: 'feedback' }],
         [{ text: '🌐 Выбрать другой язык', callback_data: 'backtoLang' }],
       ]
     })
@@ -75,7 +81,7 @@ const start = () => {
     aboutAxelarOptionsEng = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: '📝 Articles', callback_data: 'articles' }, { text: '💬 Telegram channels', callback_data: 'channels' }],
+          [{ text: '📝 Articles', callback_data: 'articles' }, { text: '✈️ Telegram channels', callback_data: 'channels' }],
           [{ text: '🎦 Videos', callback_data: 'videos' }, { text: '💲 Backers', callback_data: 'funds' }],
           [{ text: '🛣 Roadmap', callback_data: 'roadmap' }, { text: '👥 Contacts', callback_data: 'contacts' }],
           [{ text: 'How to get involved?', callback_data: 'hotoget' }],
@@ -86,7 +92,7 @@ const start = () => {
     aboutAxelarOptionsRus = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: '📝 Статьи', callback_data: 'articles' }, { text: '💬 Telegram каналы', callback_data: 'channels' }],
+          [{ text: '📝 Статьи', callback_data: 'articles' }, { text: '✈️ Telegram каналы', callback_data: 'channels' }],
           [{ text: '🎦 Видео', callback_data: 'videos' }, { text: '💲 Фонды', callback_data: 'funds' }],
           [{ text: '🛣 Roadmap', callback_data: 'roadmap' }, { text: '👥 Контакты', callback_data: 'contacts' }],
           [{ text: 'Как я могу поучаствовать в проекте?', callback_data: 'hotoget' }],
@@ -105,7 +111,7 @@ const start = () => {
       goBackToAboutAxelarOptionsRus = {
         reply_markup: JSON.stringify({
           inline_keyboard: [
-            [{ text: '⬅️ Back', callback_data: 'backtoAboutAxelar' }],
+            [{ text: '⬅️ Назад', callback_data: 'backtoAboutAxelar' }],
           ]
         })
       }
@@ -136,11 +142,11 @@ const start = () => {
     contactsOptionsEng = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Axelar Website', url: 'https://axelar.network' }, { text: 'Twitter', url: 'https://twitter.com/axelarcore' }],
-          [{ text: 'Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }, { text: 'Medium', url: 'https://medium.com/axelar' }],
-          [{ text: 'Telegram Announcements', url: 'https://t.me/axelarnetwork' }],
-          [{ text: 'Telegram Community', url: 'https://t.me/axelarcommunity' }],
-          [{ text: 'Developer Discord', url: 'https://discord.com/invite/aRZ3Ra6f7D' }],
+          [{ text: '🌎 Axelar Website', url: 'https://axelar.network' }, { text: '🐦 Twitter', url: 'https://twitter.com/axelarcore' }],
+          [{ text: '📺 Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }, { text: '📰 Medium', url: 'https://medium.com/axelar' }],
+          [{ text: '✈️ Telegram Announcements', url: 'https://t.me/axelarnetwork' }],
+          [{ text: '✈️ Telegram Community', url: 'https://t.me/axelarcommunity' }],
+          [{ text: '👾 Developer Discord', url: 'https://discord.com/invite/aRZ3Ra6f7D' }],
           [{ text: '⬅️ Back', callback_data: 'backtoAboutAxelar' }],
         ]
       })
@@ -148,11 +154,11 @@ const start = () => {
     contactsOptionsRus = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Axelar Website', url: 'https://axelar.network' }, { text: 'Twitter', url: 'https://twitter.com/axelarcore' }],
-          [{ text: 'Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }, { text: 'Medium', url: 'https://medium.com/axelar' }],
-          [{ text: 'Telegram проекта', url: 'https://t.me/axelarnetwork' }],
-          [{ text: 'Telegram сообщества', url: 'https://t.me/axelarcommunity' }],
-          [{ text: 'Discord', url: 'https://discord.com/invite/aRZ3Ra6f7D' }],
+          [{ text: '🌎 Axelar Website', url: 'https://axelar.network' }, { text: '🐦 Twitter', url: 'https://twitter.com/axelarcore' }],
+          [{ text: '📺 Youtube', url: 'https://www.youtube.com/channel/UCf8GFg58fdp1iZwLAOV1Tgg' }, { text: '📰 Medium', url: 'https://medium.com/axelar' }],
+          [{ text: '✈️ Telegram проекта', url: 'https://t.me/axelarnetwork' }],
+          [{ text: '✈️ Telegram сообщества', url: 'https://t.me/axelarcommunity' }],
+          [{ text: '👾 Discord', url: 'https://discord.com/invite/aRZ3Ra6f7D' }],
           [{ text: '⬅️ Назад', callback_data: 'backtoAboutAxelar' }],
         ]
       })
@@ -196,13 +202,9 @@ const start = () => {
     articlesOptionsRus = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Introducing Axelar Network', url: 'https://medium.com/axelar/introducing-axelar-network-45fccea94730' }],
-          [{ text: 'A Technical Introduction to the Axelar Network', url: 'https://axelar.network/a-technical-introduction-to-the-axelar-network' }],
-          [{ text: 'Axelar Newsletter — Mainnet Rollout Announcement', url: 'https://medium.com/axelar/axelar-newsletter-mainnet-rollout-begins-announcement-f8957d93a6ae' }],
-          [{ text: 'Axelar Newsletter — December Edition', url: 'https://medium.com/axelar/axelar-newsletter-december-edition-bcb93cf331c0' }],
-          [{ text: 'Axelar Launches Line of Exclusive Community NFTs', url: 'https://medium.com/axelar/axelar-launches-line-of-exclusive-community-nfts-a375d32dbde2' }],
-          [{ text: 'Axelar Open-Sources Multi-Party Cryptography Libraries', url: 'https://medium.com/axelar/axelar-open-sources-multi-party-cryptography-libraries-b6addfe040b4' }],
-          [{ text: 'Axelar Careers', url: 'https://axelar.network/careers' }],
+          [{ text: 'Переводы последних новостей от команды Axelar (Январь 11, 2022)', url: 'https://medium.com/@intexsemen/russian-translation-of-the-latest-axelar-news-january11th-2022-96d046e5b125' }],
+          [{ text: 'АКСЕЛАР ВИКИ', url: 'https://surftest.gitbook.io/axelar-ru-wiki' }],
+          [{ text: 'Axelar Network - масштабируемая платформа кросс-чейн коммуникации', url: 'https://vc.ru/crypto/349385-axelar-network-masshtabiruemaya-platforma-kross-cheyn-kommunikacii' }],
           [{ text: '⬅️ Назад', callback_data: 'backtoAboutAxelar' }],
         ]
       })
@@ -210,10 +212,10 @@ const start = () => {
     howtogetOptionsEng = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Incentivized Quantum Community Program', url: 'https://medium.com/axelar/axelar-announces-the-launch-of-their-incentivized-quantum-community-program-f8e2d01fd970' }],
-          [{ text: 'Incentivized Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
-          [{ text: 'Ecosystem Developer Opportunities', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
-          [{ text: 'Axelar Careers', url: 'https://axelar.network/careers' }],
+          [{ text: '👪 Incentivized Quantum Community Program', url: 'https://medium.com/axelar/axelar-announces-the-launch-of-their-incentivized-quantum-community-program-f8e2d01fd970' }],
+          [{ text: '💾 Incentivized Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
+          [{ text: '♻️ Ecosystem Developer Opportunities', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
+          [{ text: '💼 Axelar Careers', url: 'https://axelar.network/careers' }],
           [{ text: '⬅️ Back', callback_data: 'backtoAboutAxelar' }],
         ]
       })
@@ -221,10 +223,10 @@ const start = () => {
     howtogetOptionsRus = {
       reply_markup: JSON.stringify({
         inline_keyboard: [
-          [{ text: 'Программа Quantum Community', url: 'https://medium.com/axelar/axelar-announces-the-launch-of-their-incentivized-quantum-community-program-f8e2d01fd970' }],
-          [{ text: 'Участие в Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
-          [{ text: 'Возможности экосистемы для разработчиков', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
-          [{ text: 'Карьера в Axelar', url: 'https://axelar.network/careers' }],
+          [{ text: '👪 программа Quantum Community', url: 'https://medium.com/axelar/axelar-announces-the-launch-of-their-incentivized-quantum-community-program-f8e2d01fd970' }],
+          [{ text: '💾 Участие в Testnet', url: 'https://axelar.network/axelar-network-opens-registration-for-its-incentivized-testnet' }],
+          [{ text: '♻️ Возможности экосистемы для разработчиков', url: 'https://axelar.knack.com/axelar-forms#ecosystem-dev-details' }],
+          [{ text: '💼 Карьера в Axelar', url: 'https://axelar.network/careers' }],
           [{ text: '⬅️ Назад', callback_data: 'backtoAboutAxelar' }],
         ]
       })
@@ -234,7 +236,7 @@ const start = () => {
   quantumOptionsEng = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'More Info', url: 'https://axelar.network/axelar-announces-the-launch-of-their-incentivized-quantum-community-program' }],
+        [{ text: 'ℹ️ More Info', url: 'https://axelar.network/axelar-announces-the-launch-of-their-incentivized-quantum-community-program' }],
         [{ text: '⬅️ Back', callback_data: 'backtoMainMenu' }],
       ]
     })
@@ -243,7 +245,7 @@ const start = () => {
   quantumOptionsRus = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'Узнать больше', url: 'https://axelar.network/axelar-announces-the-launch-of-their-incentivized-quantum-community-program' }],
+        [{ text: 'ℹ️ Узнать больше', url: 'https://axelar.network/axelar-announces-the-launch-of-their-incentivized-quantum-community-program' }],
         [{ text: '⬅️ Назад', callback_data: 'backtoMainMenu' }],
       ]
     })
@@ -297,9 +299,29 @@ const start = () => {
     const text = msg.text
     const chatId = msg.chat.id
     console.log(msg.chat.username)
-    
+
+    if (chatsOnFeedback.includes(msg.chat.id)) {
+      if (usersLang === 'eng') {
+        for (var i = 0; i < chatsOnFeedback.length; i++){
+          if (chatsOnFeedback[i] === msg.chat.id) {
+            chatsOnFeedback.splice(i, 1)
+          }
+        }
+        console.log(msg.text)
+        return bot.sendMessage(chatId, `Thanks for your feedback! 💖`, topicOptionsEng)
+      }
+      if (usersLang  === 'rus') {
+        for (var i = 0; i < chatsOnFeedback.length; i++) {
+          if (chatsOnFeedback[i] === msg.chat.id) {
+            chatsOnFeedback.splice(i, 1)
+          }
+        }
+        console.log(msg.text)
+        return bot.sendMessage(chatId, `Спасибо за ваш отклик! 💖`, topicOptionsRus)
+      }
+    }
     if (text === '/start') {
-      return bot.sendMessage( chatId, `Choose language`, languageOptions)
+      return bot.sendMessage(chatId, `Choose language 🌐`, languageOptions)
     }
     if (text.includes('42')) {
       subscribedUsers.forEach(userCharId => {
@@ -314,7 +336,7 @@ const start = () => {
   bot.on('callback_query', function onCallbackQuery(msg) {
     const chatId = msg.message.chat.id
     if (msg.data === 'backtoLang') {
-      return bot.sendMessage(chatId, `Choose language`, languageOptions)
+      return bot.sendMessage(chatId, `Choose language 🌐`, languageOptions)
     }
     //Main Menu
     if (msg.data === 'backtoMainMenu' && usersLang === 'eng') {
@@ -362,10 +384,10 @@ const start = () => {
         } 
         if (msg.data === 'videos') {
           if (usersLang === 'eng') {
-            return bot.sendMessage(chatId, videosMessageEng(), videosOptionsEng)
+            return bot.sendMessage(chatId, videosMessageEng(), goBackToAboutAxelarOptionsEng)
           }
           if (usersLang === 'rus') {
-            return bot.sendMessage(chatId, videosMessageRus(), videosOptionsRus)
+            return bot.sendMessage(chatId, videosMessageRus(), goBackToAboutAxelarOptionsRus)
           }
         } 
         if (msg.data === 'contacts') {
@@ -451,64 +473,18 @@ const start = () => {
         return bot.sendMessage(chatId, forDevsRus, devOptionsRus)
       }
     } 
-    //2 step
-        if (msg.data === 'docs') {
-          const docsMessageEng = 'docs'
-          const docsMessageRus = 'docs'
-          if (usersLang === 'eng') {
-            return bot.sendMessage(chatId, docsMessageEng)
-          }
-          if (usersLang === 'rus') {
-            return bot.sendMessage(chatId, docsMessageRus)
-          }
-        }
-        if (msg.data === '????') {
-          const docsMessageEng = 'docs'
-          const docsMessageRus = 'docs'
-          if (usersLang === 'eng') {
-            return bot.sendMessage(chatId, docsMessageEng)
-          }
-          if (usersLang === 'rus') {
-            return bot.sendMessage(chatId, docsMessageRus)
-          }
-        }
 
-    if (msg.data === 'testnet') {
-      const testnetMessageEng = 'about Testnet'
-      const testnetMessageRus = 'про Testnet'
-      var forDevsEng = 'For developers'
-      var forDevsRus = 'Для разработчиков'
+    if (msg.data === 'whitepaper') {
       if (usersLang === 'eng') {
-        return bot.sendMessage(chatId, testnetMessageEng, testnetOptionsEng)
+        bot.sendMessage(chatId, `There goes Axelar's Whitepaper!`)
+        return bot.sendDocument(chatId, whitepaperEng, goBackToAboutAxelarOptionsEng)
       }
       if (usersLang === 'rus') {
-        return bot.sendMessage(chatId, testnetMessageRus, testnetOptionsRus)
+        bot.sendMessage(chatId, `Whitepaper проекта на русском языке`)
+        return bot.sendDocument(chatId, whitepaperRus, goBackToAboutAxelarOptionsRus)
       }
+      bot.se
     } 
-    //2 step
-        if (msg.data === 'testnetInfo') {
-          const testnetInfoMessageEng = 'testnetInfo'
-          const testnetInfoMessageRus = 'testnetInfo'
-          var forDevsEng = 'For developers'
-          var forDevsRus = 'Для разработчиков'
-          if (usersLang === 'eng') {
-            return bot.sendMessage(chatId, testnetInfoMessageEng)
-          }
-          if (usersLang === 'rus') {
-            return bot.sendMessage(chatId, testnetInfoMessageRus)
-          }
-        } if (msg.data === 'testnetGuide') {
-          const testnetGuideMessageEng = 'testnetGuide'
-          const testnetGuideMessageRus = 'testnetGuide'
-          var forDevsEng = 'For developers'
-          var forDevsRus = 'Для разработчиков'
-          if (usersLang === 'eng') {
-            return bot.sendMessage(chatId, testnetGuideMessageEng)
-          }
-          if (usersLang === 'rus') {
-            return bot.sendMessage(chatId, testnetGuideMessageRus)
-          }
-        }
 
     if (msg.data === 'notifications') {
       if (usersLang === 'eng') {
@@ -518,6 +494,17 @@ const start = () => {
       if (usersLang === 'rus') {
         subscribedUsers.push(chatId)
         return bot.sendMessage(chatId, `Вы успешно подписались на рассылку Axelar!`)
+      }
+    } 
+    
+    if (msg.data === 'feedback') {
+      if (usersLang === 'eng') {
+        chatsOnFeedback.push(chatId)
+        return bot.sendMessage(chatId, feedbackMessageEng())
+      }
+      if (usersLang === 'rus') {
+        chatsOnFeedback.push(chatId)
+        return bot.sendMessage(chatId, feedbackMessageRus())
       }
     } 
   })
