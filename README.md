@@ -4,4 +4,4 @@ Telegram bot built with <a href="https://github.com/yagop/node-telegram-bot-api"
 
 Hosted on <a href="https://heroku.com">Heroku</a>
 
-<img src="screenshots/screenshot.png" width="800">
+<img src="screenshots/screenshot.png" width="600">
